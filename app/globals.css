@@ -1,8 +1,26 @@
 @import "tailwindcss";
 
+/* O tema vem do atributo data-tema no <html> (claro/escuro), escolhido pelo usuario. */
+@custom-variant dark (&:where([data-tema="escuro"], [data-tema="escuro"] *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8f8fb;
+  --foreground: #18181b;
+  /* Cores dos status (quadro e graficos), validadas para daltonismo. */
+  --status-todo: #2a78d6;
+  --status-doing: #eb6834;
+  --status-done: #1baf7a;
+  --superficie: #ffffff;
+}
+
+[data-tema="escuro"] {
+  color-scheme: dark;
+  --background: #09090b;
+  --foreground: #ededed;
+  --status-todo: #3987e5;
+  --status-doing: #d95926;
+  --status-done: #199e70;
+  --superficie: #18181b;
 }
 
 @theme inline {
@@ -12,15 +30,31 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: rgb(99 102 241 / 0.25);
+}
+
+@keyframes surgir {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.animar-surgir {
+  animation: surgir 0.25s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
