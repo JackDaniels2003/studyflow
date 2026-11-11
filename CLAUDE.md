@@ -81,9 +81,12 @@ busca Ctrl+K, lembretes de prazo, modelo de Projeto Integrador.
    `app/auth/callback/route.js` redireciona com caminho relativo (atrás do nginx o `request.url`
    vira `localhost:3000`). Testado simulando o nginx com `curl -H "Host: ..."` no `npm start`.
    Falta só confirmar na EC2 real; em HTTP, "copiar" usa `execCommand` e notificações não existem.
-3. **Deploy na AWS** seguindo `DEPLOY-AWS.md` (nunca foi testado numa conta real).
+3. ~~**Deploy na AWS**~~ **FEITO** (EC2 + nginx + pm2 + Supabase, em HTTP, com Elastic IP e a Site
+   URL/Redirect URLs do Supabase já ajustadas). `DEPLOY-AWS.md` foi testado de ponta a ponta e
+   tem "Notas do teste real". Para atualizar o site: `git pull && npm ci && npm run build &&
+   pm2 restart studyflow` na EC2. Se o professor exigir RDS/S3, é reescrita grande (ver o doc).
 4. Deploy no Render (opcional): `render.yaml` está pronto.
 5. Pedir ao Daniel para apagar as contas de teste `claude.teste.*@example.com` em
    *Authentication → Users* do Supabase.
-6. Para "Esqueci minha senha" funcionar fora do localhost: adicionar a URL do site em
-   *Authentication → URL Configuration* (Site URL e Redirect URLs).
+6. ~~"Esqueci minha senha" fora do localhost~~ **FEITO** para o endereço da EC2. Se o endereço
+   mudar (outro IP, CloudFront, domínio), atualizar *Authentication → URL Configuration*.

@@ -1,7 +1,8 @@
 # Rodar o StudyFlow numa EC2 (AWS Learner Lab)
 
-> **Status: roteiro não testado.** Foi escrito sem acesso a uma conta AWS. Confira cada passo
-> na prática, ajuste o que divergir e corrija este arquivo.
+> **Status: testado de ponta a ponta** numa conta real do Learner Lab (nov/2026): EC2 + nginx +
+> pm2 + Supabase, em HTTP. Os passos abaixo funcionaram; as diferenças encontradas estão em
+> "Notas do teste real", logo antes de "Problemas comuns".
 
 ## Visão geral
 
@@ -148,6 +149,27 @@ pm2 restart studyflow
 1. Start Lab.
 2. EC2 → selecione a instância → **Start instance**. Com Elastic IP o endereço é o mesmo.
 3. O `pm2` volta sozinho (por causa do `pm2 startup`). Se não voltar: `pm2 resurrect`.
+
+## Notas do teste real
+
+- O console do lab veio **em português**: "Executar instâncias", "IPs elásticos", "Alterar tipo
+  de instância".
+- A imagem Ubuntu veio como **26.04 ("resolute")**, não 24.04. Node 22 pelo NodeSource, nginx e
+  pm2 funcionaram igual. O `sudo` avisa `'-E' is ignored`: é inofensivo.
+- O tipo sugerido pelo console foi **t3.micro (1 GB)**. Trocamos para **t3.small** (Estado da
+  instância → Parar; Ações → Configurações da instância → Alterar tipo de instância; Iniciar).
+  Com t3.small o `npm run build` passou sem precisar de swap.
+- O **EC2 Instance Connect** (Conectar → no navegador) funciona sem `.pem` nem SSH no Windows.
+- O terminal do navegador **às vezes executa o texto colado duas vezes** (isso gerou um
+  `git clone` aninhado). Prefira comandos que podem rodar duas vezes sem estragar: criar o
+  `.env.local` com `printf '...' > arquivo` (em vez de `nano`/`cat >`), e subir o site com
+  `pm2 delete studyflow 2>/dev/null; pm2 start npm --name studyflow -- start`.
+- Para o site voltar sozinho após reiniciar:
+  `sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu && pm2 save`
+  (o último comando deve imprimir `enabled` ao rodar `systemctl is-enabled pm2-ubuntu`).
+- O `/auth/callback` redirecionava para `localhost:3000` atrás do nginx; já corrigido no código
+  (redireciona com caminho relativo).
+- Em HTTP o botão de notificações some e "copiar link" usa o plano B do `lib/copiar.js`.
 
 ## Problemas comuns
 
