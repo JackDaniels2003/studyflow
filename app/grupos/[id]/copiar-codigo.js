@@ -6,6 +6,7 @@ import { Check, Copy, Link2, RefreshCw, UserPlus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useAvisos } from "@/components/avisos";
 import { Janela, botaoPrimario, botaoSecundario } from "@/components/ui";
+import { copiarTexto } from "@/lib/copiar";
 
 const ALFABETO = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sem 0/O e 1/I, que confundem
 
@@ -28,11 +29,10 @@ export default function CopiarCodigo({ grupoId, codigo, criador }) {
   const link = `${origem}/convite/${codigo}`;
 
   async function copiar(texto, qual) {
-    try {
-      await navigator.clipboard.writeText(texto);
+    if (await copiarTexto(texto)) {
       setCopiado(qual);
       setTimeout(() => setCopiado(null), 2000);
-    } catch {
+    } else {
       avisar("Não deu para copiar. Selecione e copie manualmente.", "erro");
     }
   }

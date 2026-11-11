@@ -499,7 +499,11 @@ const mesmaReacao = (a, b) =>
 function BotaoNotificacoes() {
   const sistema = useSyncExternalStore(
     () => () => {},
-    () => (typeof Notification === "undefined" ? "indisponivel" : Notification.permission),
+    // Notification só funciona em contexto seguro (HTTPS/localhost); em HTTP o botão some.
+    () =>
+      typeof Notification === "undefined" || !window.isSecureContext
+        ? "indisponivel"
+        : Notification.permission,
     () => "default",
   );
   const [pedido, setPedido] = useState(null);

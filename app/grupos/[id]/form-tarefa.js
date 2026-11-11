@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { Janela, botaoPrimario, botaoSecundario, campo, rotulo } from "@/components/ui";
 import { isoParaInputLocal } from "@/lib/formatos";
+import { novoId } from "@/lib/id";
 import { PRIORIDADES, STATUS } from "@/lib/tarefas";
 import Anexos from "./anexos";
 import Comentarios from "./comentarios";
@@ -224,7 +225,7 @@ function EditorChecklist({ itens, onMudar }) {
   function adicionar() {
     const texto = novo.trim();
     if (!texto) return;
-    onMudar([...itens, { id: crypto.randomUUID(), texto, feito: false }]);
+    onMudar([...itens, { id: novoId(), texto, feito: false }]);
     setNovo("");
   }
 

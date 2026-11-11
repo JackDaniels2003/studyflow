@@ -3,6 +3,7 @@
 import { createContext, use, useCallback, useMemo, useRef, useState } from "react";
 import { CircleAlert, CircleCheck, Info } from "lucide-react";
 import { Janela, botaoPrimario, botaoSecundario } from "@/components/ui";
+import { novoId } from "@/lib/id";
 
 const Contexto = createContext(null);
 
@@ -19,7 +20,7 @@ export function AvisosProvider({ children }) {
   const resolver = useRef(null);
 
   const avisar = useCallback((texto, tipo = "sucesso") => {
-    const id = crypto.randomUUID();
+    const id = novoId();
     setAvisos((atual) => [...atual.slice(-2), { id, texto, tipo }]);
     setTimeout(() => setAvisos((atual) => atual.filter((a) => a.id !== id)), 3500);
   }, []);

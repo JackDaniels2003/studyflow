@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check, Link2, ListPlus, Sparkles, Tags, Wand2 } from "lucide-react";
 import { useAvisos } from "@/components/avisos";
 import { botaoPrimario, botaoSecundario, cartao } from "@/components/ui";
+import { copiarTexto } from "@/lib/copiar";
 
 // Guia para grupos novos: aparece enquanto o quadro esta vazio.
 export default function PrimeirosPassos({ codigo, temMembros, temMaterias, onNovaTarefa, onUsarModelo }) {
@@ -11,10 +12,9 @@ export default function PrimeirosPassos({ codigo, temMembros, temMaterias, onNov
   const [preenchendo, setPreenchendo] = useState(false);
 
   async function copiarLink() {
-    try {
-      await navigator.clipboard.writeText(`${window.location.origin}/convite/${codigo}`);
+    if (await copiarTexto(`${window.location.origin}/convite/${codigo}`)) {
       avisar("Link de convite copiado. Mande no grupo da turma!");
-    } catch {
+    } else {
       avisar(`Código do grupo: ${codigo}`, "info");
     }
   }
