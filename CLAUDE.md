@@ -76,13 +76,11 @@ busca Ctrl+K, lembretes de prazo, modelo de Projeto Integrador.
 ## Pendências (nesta ordem)
 1. **Rodar o `supabase/schema.sql` atualizado** no SQL Editor do Supabase (se o Daniel ainda não
    rodou). Conferir sondando a REST, ex.: `GET /rest/v1/poll_votes?limit=1` com o header `apikey`.
-2. **Plano B para HTTP (sem HTTPS).** Numa EC2 simples o site é servido por `http://IP`, e
-   `crypto.randomUUID()`, `navigator.clipboard` e `Notification` só existem em contexto seguro.
-   `crypto.randomUUID` está em: `components/avisos.js`, `lib/arquivos.js`, `lib/modelo-projeto.js`,
-   `app/grupos/[id]/form-tarefa.js`, `app/grupos/[id]/foco/foco.js` (e outros). Criar um helper
-   `lib/id.js` (`novoId()` com fallback `Math.random`/`getRandomValues`) e trocar todos os usos;
-   garantir que clipboard e Notification falhem sem erro. Sem isso, em HTTP os avisos, o checklist
-   e o upload quebram.
+2. ~~**Plano B para HTTP (sem HTTPS).**~~ **FEITO.** `lib/id.js` (`novoId()`), `lib/copiar.js`
+   (`copiarTexto()` com plano B), botão de notificações some fora de contexto seguro, e
+   `app/auth/callback/route.js` redireciona com caminho relativo (atrás do nginx o `request.url`
+   vira `localhost:3000`). Testado simulando o nginx com `curl -H "Host: ..."` no `npm start`.
+   Falta só confirmar na EC2 real; em HTTP, "copiar" usa `execCommand` e notificações não existem.
 3. **Deploy na AWS** seguindo `DEPLOY-AWS.md` (nunca foi testado numa conta real).
 4. Deploy no Render (opcional): `render.yaml` está pronto.
 5. Pedir ao Daniel para apagar as contas de teste `claude.teste.*@example.com` em
